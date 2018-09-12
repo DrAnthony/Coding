@@ -2,7 +2,7 @@
  * 自定义单元格的渲染器
  */
 
-package LG;
+package team.bro.life_game;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -27,7 +27,6 @@ boolean isSelected, boolean hasFocus, int row, int column) {
 Component renderer =
 DEFAULT_RENDERER.getTableCellRendererComponent(table, value,
 isSelected, hasFocus, row, column);
-Color foreground, background;
 if (m[row][column]==1) {//根据GUI界面传入的鼠标的点击位置对应的mark数组的值进行单元格的渲染
 	renderer.setBackground(color);
 }

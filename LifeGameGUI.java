@@ -1,60 +1,51 @@
 /*
+ * Version 2.0
+ * 删除了logic.java文件
+ * 将life_game class 的与GUI无关的数据转移到control class中
+ * 重新组织了程序的逻辑层次
  * 此文件主要实现 GUI界面的控制
  * 本程序打开一次只能使用一次
  */
-package LG;
+
+package team.bro.life_game;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Random;
-import java.util.concurrent.Semaphore;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.table.TableColumn;
 
-import javax.swing.*;
-import javax.swing.table.*;
-public class LG_GUI {
-	public static Semaphore sem=new Semaphore(1);
-	JFrame mainFrame;//主框架
-	JPanel mainPanel;//主容器
-	JPanel ioPanel,tablePanel;
-	JLabel rowLabel,colLabel,ageLabel;
-	JTextField rowText,colText,ageText;
-	volatile JButton start;
-	JButton randomCell,creatMap,ensureCell,clear;
-	static Control con=new Control();
-	drawThread newDT;
-	Go go;
-	Thread thread;
-	MouseListener m;//表格的鼠标监听器
-	int row,col;
-	volatile int[][] mark;//用来保存细胞地图信息，用来绘绘图以及向逻辑提交信息
-	volatile int age;//用来保存代数
-	static JTable table;
-
-	/*
-	 * 程序循环时要休眠，未避免休眠主线程，设置此线程
-	 */
-	class Go implements Runnable{
-		public volatile boolean exit=false;
-		public void run() {
-			while(!exit) {
-				age++;
-			try {
-					mark=con.creat(row, col);
-					newDT=new drawThread(table,mainPanel,ageText,mark,age);
-					SwingUtilities.invokeLater(newDT);
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+public class LifeGameGUI {
+	private JFrame mainFrame; 
+	private JPanel mainPanel; 
+	private JPanel ioPanel, tablePanel; 
+	private JLabel rowLabel,colLabel,ageLabel; 
+	private JTextField rowText,colText,ageText; 
+	private volatile JButton start; 
+	private JButton randomCell,creatMap,ensureCell,clear; 
+	private static Control con=new Control(); 
+	private drawThread newDT; 
+	private Go go; 
+	private Thread thread; 
+	private MouseListener m; 
+	private int row,col;
+	private volatile int[][] mark; 
+	//private int age; 
+	private JTable table;
+	
+	public LifeGameGUI(){
+		
 	}
 	/*
 	 * 初始化界面框架
@@ -73,9 +64,8 @@ public class LG_GUI {
 	 * 初始化界面用到的数据
 	 */
 	public void initData() {
-		mark=null;
-		age=0;
-		ageText.setText("第"+age+"代");
+		con.setAge(0);
+		ageText.setText("第"+con.getAge()+"代");
 		rowText.setText("40");
 		colText.setText("40");
 		rowText.setEditable(true);
@@ -151,7 +141,7 @@ public class LG_GUI {
 			public void actionPerformed(ActionEvent arg0) {
 				if(!creatTable())
 					return;
-				con.randomMap(mark, row, col);
+				con.randomMap();
 				randomCell.setEnabled(false);
 				ensureCell.setEnabled(true);
 				creatMap.setEnabled(false);
@@ -176,7 +166,7 @@ public class LG_GUI {
 		//提交地图信息
 		ensureCell.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				con.creatMap(mark,row,col);
+				//con.creatMap(mark,row,col);
 				start.setEnabled(true);
 				ensureCell.setEnabled(false);
 				flushMap(Color.BLACK);
@@ -194,7 +184,7 @@ public class LG_GUI {
 				else if(start.getText().equals("暂停繁衍")){
 					clear.setEnabled(true);
 					table.removeMouseListener(m);
-					go.exit=true;
+					go.setExit(true);
 					start.setText("继续繁衍");
 				}
 				else {
@@ -237,31 +227,34 @@ public class LG_GUI {
 		if(!isValid()) {
 			return false;
 		}
-		String column[]=new String[col];
-		for(int i=0;i<col;i++)
+		String column[]=new String[con.getCol()];
+		for(int i=0;i<con.getCol();i++)
 			column[i]="100";
-		Object[][] obj=new Object[row][col];
-		mark=new int[row][col];
-		for(int i=0;i<row;i++) {
-			for(int j=0;j<col;j++) {
+		Object[][] obj=new Object[con.getRow()][con.getCol()];
+		for(int i=0;i<con.getRow();i++) {
+			for(int j=0;j<con.getCol();j++) {
 				obj[i][j]="";
-				mark[i][j]=0;
 			}
 		}
 		table=new JTable(obj,column) {
+		/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 		public boolean isCellEditable(int row,int colummn) {
 			return false;
 		}
 		};
 		TableColumn Col = null;
-		int tableWidth=600/col;
-	    for(int i = 0; i < col; i++){
+		int tableWidth=600/con.getCol();
+	    for(int i = 0; i < con.getCol(); i++){
 	    	  Col= table.getColumnModel().getColumn(i);  
 	            /*设置每一列的宽度*/  
 	          Col.setPreferredWidth(tableWidth);  
 	    }
 	    table.setRowHeight(tableWidth);
-	    table.setBounds(0,15,600,tableWidth*row);
+	    table.setBounds(0,15,600,tableWidth*con.getRow());
 	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);  
 	    table.setVisible(true);
 	    table.setCellSelectionEnabled(true);
@@ -271,9 +264,7 @@ public class LG_GUI {
 	  //为表格添加鼠标监听器
 	    m=new MouseAdapter() {
 	    	public void mouseClicked(MouseEvent e) {
-	    		int rowNum=table.getSelectedRow();
-			    int colNum=table.getSelectedColumn();
-			    mark[rowNum][colNum]=(mark[rowNum][colNum]==0)?1:0;
+			    con.setMap(table.getSelectedRow(), table.getSelectedColumn());
 			    flushMap(Color.RED);
             }  
 	    };
@@ -281,15 +272,15 @@ public class LG_GUI {
 	    
 	    tablePanel.add(table,BorderLayout.CENTER);
 	    tablePanel.setVisible(true);
-	    tablePanel.validate();
-	    tablePanel.repaint();
+	    table.validate();
+	    table.repaint();
 	    return true;
 	}
 	/*
 	 * 刷新地图
 	 */
 	public void flushMap(Color c) {
-		EvenOddRenderer ren=new EvenOddRenderer(mark,c);
+		EvenOddRenderer ren=new EvenOddRenderer(con.getMap(),c);
 		table.setDefaultRenderer(Object.class, ren);
 		mainPanel.validate();
 		mainPanel.repaint();
@@ -299,8 +290,8 @@ public class LG_GUI {
 	 */
 	public boolean isValid() {
 		try {
-			row=Integer.parseInt(rowText.getText());
-			col=Integer.parseInt(colText.getText());
+			con.setRange(Integer.parseInt(rowText.getText()), 
+					     Integer.parseInt(colText.getText()));
 		}catch(Exception e) {
 			JLabel tip=new JLabel("请输入有效的数据！");
 			tip.setFont(new Font("Dialog", Font.BOLD, 15));
@@ -311,13 +302,37 @@ public class LG_GUI {
 			tablePanel.repaint();
 			return false;
 		}
+		con.initMap();
 		return true;
 	}
 	
 	public static void main(String[]args) {
-		LG_GUI gui=new LG_GUI();
+		LifeGameGUI gui = new LifeGameGUI();
 		gui.initialFrame();
 		gui.showFrame();
+	}
+	
+	/*
+	 * 程序循环时要休眠，未避免休眠主线程，设置此线程
+	 */
+	class Go implements Runnable{
+		private volatile boolean exit=false;
+		public void setExit(boolean b) {
+			exit=b;
+		}
+		public void run() {
+			while(!exit) {
+				con.setAge(1);
+			try {
+				    con.create();
+					newDT=new drawThread(table,mainPanel,ageText,con.getMap(),con.getAge());
+					SwingUtilities.invokeLater(newDT);
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
 

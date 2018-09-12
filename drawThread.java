@@ -1,4 +1,4 @@
-package LG;
+package team.bro.life_game;
 
 import java.awt.Color;
 
