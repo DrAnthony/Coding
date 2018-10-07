@@ -1,8 +1,4 @@
 /*
- * Version 2.0
- * 删除了logic.java文件
- * 将life_game class 的与GUI无关的数据转移到control class中
- * 重新组织了程序的逻辑层次
  * 此文件主要实现 GUI界面的控制
  * 本程序打开一次只能使用一次
  */
@@ -39,9 +35,6 @@ public class LifeGameGUI {
 	private Go go; 
 	private Thread thread; 
 	private MouseListener m; 
-	private int row,col;
-	private volatile int[][] mark; 
-	//private int age; 
 	private JTable table;
 	
 	public LifeGameGUI(){
@@ -109,8 +102,12 @@ public class LifeGameGUI {
 		ageText=new JTextField(4);
 		rowText.setFont(new Font("Dialog", Font.BOLD, 15));
 		rowText.setBounds(100,10,80,30);
+		JLabel rowLimit=new JLabel("(1-99)");
+		rowLimit.setBounds(180,10,40,30);
 		colText.setFont(new Font("Dialog", Font.BOLD, 15));
 		colText.setBounds(300,10,80,30);
+		JLabel colLimit=new JLabel("(1-99)");
+		colLimit.setBounds(380,10,40,30);
 		ageText.setFont(new Font("Dialog", Font.BOLD, 15));
 		ageText.setBounds(500,10,80,30);
 		randomCell=new JButton("随机细胞");
@@ -124,6 +121,8 @@ public class LifeGameGUI {
 		start.setBounds(370,45,100,50);
 		clear.setBounds(490,45,100,50);
 		initData();
+		ioPanel.add(rowLimit);
+		ioPanel.add(colLimit);
 		ioPanel.add(rowLabel);
 		ioPanel.add(rowText);
 		ioPanel.add(colLabel);
@@ -180,14 +179,12 @@ public class LifeGameGUI {
 					go=new Go();
 				    thread=new Thread(go);
 					thread.start();
-				}
-				else if(start.getText().equals("暂停繁衍")){
+				}else if(start.getText().equals("暂停繁衍")){
 					clear.setEnabled(true);
 					table.removeMouseListener(m);
 					go.setExit(true);
 					start.setText("继续繁衍");
-				}
-				else {
+				}                      else {
 					clear.setEnabled(false);
 					start.setText("暂停繁衍");
 					go=new Go();
@@ -292,6 +289,8 @@ public class LifeGameGUI {
 		try {
 			con.setRange(Integer.parseInt(rowText.getText()), 
 					     Integer.parseInt(colText.getText()));
+			if(con.getRow()<=0||con.getCol()<=0||con.getRow()>99||con.getCol()>99)
+				throw new Exception("非法输入！");
 		}catch(Exception e) {
 			JLabel tip=new JLabel("请输入有效的数据！");
 			tip.setFont(new Font("Dialog", Font.BOLD, 15));
