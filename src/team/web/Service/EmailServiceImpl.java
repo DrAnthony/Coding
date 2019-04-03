@@ -26,11 +26,11 @@ public class EmailServiceImpl implements EmailService{
 		//***
 		System.out.println(email);
 		int c=(int)(Math.random()*10000);
-      int temp=c;
-      for(int i=0;i<4;i++){
-          if((temp/=10)==0)
-             c*=10;
-      }
+                int temp=c;
+                for(int i=0;i<4;i++){
+                    if((temp/=10)==0)
+                       c*=10;
+                }
 		String code=String.valueOf(c);
 		//***
 		System.out.println(code);
