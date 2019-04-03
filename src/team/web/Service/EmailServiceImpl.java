@@ -26,14 +26,19 @@ public class EmailServiceImpl implements EmailService{
 		//***
 		System.out.println(email);
 		int c=(int)(Math.random()*10000);
+      int temp=c;
+      for(int i=0;i<4;i++){
+          if((temp/=10)==0)
+             c*=10;
+      }
 		String code=String.valueOf(c);
 		//***
 		System.out.println(code);
 		SimpleMailMessage smm=new SimpleMailMessage();
 		smm.setFrom("w826581298@163.com");
 		smm.setTo(email);
-		smm.setSubject("ÑéÖ¤Âë");
-		smm.setText("ÑéÖ¤ÂëÓÐÐ§ÆÚ2·ÖÖÓ£º"+code);
+		smm.setSubject("éªŒè¯ç ");
+		smm.setText("éªŒè¯ç æœ‰æ•ˆæœŸ2åˆ†é’Ÿï¼š"+code);
 		//***
 		System.out.println("Over");
 		sender.send(smm);
