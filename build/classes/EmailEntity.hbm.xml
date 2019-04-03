@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2019-4-2 18:23:35 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+ <class name="priv.wd.Entity.EmailEntity" table="EMAIL_INFO">
+  <id access="field" name="email_id" type="int">
+   <column name="EMAIL_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property access="field" generated="never" lazy="false"
+   name="email_add" type="java.lang.String">
+   <column name="EMAIL_ADD"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="email_code" type="java.lang.String">
+   <column name="EMAIL_CODE"/>
+  </property>
+ </class>
+</hibernate-mapping>

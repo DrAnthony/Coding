@@ -1,0 +1,6 @@
+使用Spring+SpringMVC+Hibernate进行整合开发
+目前已经实现：
+登陆
+注册
+注册时的邮箱验证
+上传文件

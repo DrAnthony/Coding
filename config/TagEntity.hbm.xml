@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2019-4-1 14:38:49 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+ <class name="priv.wd.Entity.TagEntity" table="TAGS">
+  <id access="field" name="tag_id" type="int">
+   <column name="TAG_ID"/>
+   <generator class="identity"/>
+  </id>
+  <property access="field" generated="never" lazy="false"
+   name="tag_uuid" type="int">
+   <column name="TAG_UUID"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="tag_name" type="java.lang.String">
+   <column name="TAG_NAME"/>
+  </property>
+ </class>
+</hibernate-mapping>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2019-4-1 14:38:49 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+ <class name="priv.wd.Entity.PicEntity" table="PIC_INFO">
+  <id access="field" name="pic_id" type="int">
+   <column name="PIC_ID" not-null="true"/>
+   <generator class="identity"/>
+  </id>
+  <property access="field" generated="never" lazy="false"
+   name="pic_name" type="java.lang.String">
+   <column name="PIC_NAME"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="pic_owner" type="int">
+   <column name="PIC_OWNER"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="pic_size" type="double">
+   <column name="PIC_SIZE"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="pic_date" type="java.lang.String">
+   <column name="PIC_DATE"/>
+  </property>
+  <property access="field" generated="never" lazy="false" name="pic_tag" type="int">
+   <column name="PIC_TAG"/>
+  </property>
+  <property access="field" generated="never" lazy="false"
+   name="pic_desc" type="java.lang.String">
+   <column name="PIC_DESC"/>
+  </property>
+ </class>
+</hibernate-mapping>
