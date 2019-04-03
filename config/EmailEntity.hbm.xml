@@ -3,7 +3,7 @@
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2019-4-2 18:23:35 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
- <class name="priv.wd.Entity.EmailEntity" table="EMAIL_INFO">
+ <class name="team.web.Entity.EmailEntity" table="EMAIL_INFO">
   <id access="field" name="email_id" type="int">
    <column name="EMAIL_ID"/>
    <generator class="identity"/>

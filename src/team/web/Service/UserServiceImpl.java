@@ -23,13 +23,11 @@ public class UserServiceImpl implements UserService{
 	 * 添加新用户
 	 */
 	@Override
-	public void addUser(String name, String pwd, String email, int gender, int age) {
+	public void addUser(String name, String pwd, String email) {
 		UserEntity ue=new UserEntity();
 		ue.setName(name);
 		ue.setPWD(pwd);
 		ue.setEMail(email);
-		ue.setGender(gender);
-		ue.setAge(age);
 		user.addUser(ue);
 	}
 
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService{
 	public UserEntity getUser(String column,String str) {
 		UserEntity ue=user.getUser(column,str);
 		if(ue!=null)
-		  System.out.println(ue.getID()+" "+ue.getName()+" "+ue.getPWD()+" "+ue.getEMail()+" "+ue.getGender()+" "+ue.getAge());
+		  System.out.println(ue.getID()+" "+ue.getName()+" "+ue.getPWD()+" "+ue.getEMail());
 		return ue;
 	}
 

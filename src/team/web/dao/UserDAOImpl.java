@@ -23,7 +23,7 @@ public class UserDAOImpl implements UserDAO{
 	@Override
 	public void addUser(UserEntity user) {
 		getCurrentSession().save(user);
-		System.out.println(user.getID()+" "+user.getName()+" "+user.getPWD()+" "+user.getEMail()+" "+user.getGender()+" "+user.getAge());
+		System.out.println(user.getID()+" "+user.getName()+" "+user.getPWD()+" "+user.getEMail());
 	}
 
 	@Override

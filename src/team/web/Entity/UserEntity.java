@@ -15,8 +15,6 @@ public class UserEntity {
 	private String user_name;
 	private String user_pwd;
 	private String user_email;
-	private int user_gender;
-	private int user_age;
 	
 	public UserEntity() {};
 	
@@ -43,17 +41,5 @@ public class UserEntity {
 	}
 	public void setEMail(String email) {
 		user_email=email;
-	}
-	public int getGender() {
-		return user_gender;
-	}
-	public void setGender(int gender) {
-		user_gender=gender;
-	}
-	public int getAge() {
-		return user_age;
-	}
-	public void setAge(int age) {
-		user_age=age;
 	}
 }

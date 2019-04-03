@@ -3,7 +3,7 @@
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated 2019-4-1 14:38:49 by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
- <class name="priv.wd.Entity.PicEntity" table="PIC_INFO">
+ <class name="team.web.Entity.PicEntity" table="PIC_INFO">
   <id access="field" name="pic_id" type="int">
    <column name="PIC_ID" not-null="true"/>
    <generator class="identity"/>

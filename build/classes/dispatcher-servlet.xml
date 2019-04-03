@@ -14,6 +14,6 @@
 	    <!-- 配置视图解析器 如何把handler 方法返回值解析为实际的物理视图 -->
 	    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/pages/"></property>
-		<property name="suffix" value=".jsp"></property>
+		<property name="suffix" value=".html"></property>
 	    </bean>
 	</beans>

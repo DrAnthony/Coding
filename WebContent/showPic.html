@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>显示图片-测试</title>
+</head>
+<body>
+<h1>测试图片显示</h1>
+<button name="btn" class="btn_grey" onclick="submit()"></button><br>
+<p id="h">Hi</p><br>
+<script>
+document.write("Hello");
+</script>
+</body>
+</html>
+<script language="javascript" type="text/javascript">
+//ajax 对象
+function ajaxObject() {
+    var xmlHttp;
+    try {
+        // Firefox, Opera 8.0+, Safari
+        xmlHttp = new XMLHttpRequest();
+        } 
+    catch (e) {
+        // Internet Explorer
+        try {
+                xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+            try {
+                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+                alert("您的浏览器不支持AJAX！");
+                return false;
+            }
+        }
+    }
+    return xmlHttp;
+}
+ 
+// ajax post请求：
+function submit(){
+	//document.write("Here");
+	document.getElementById("h").innerHTML="I am out";
+    var ajax = ajaxObject();
+    ajax.open( "get" , "test", true );
+    ajax.setRequestHeader( "Content-Type" , "application/x-www-form-urlencoded" );
+    document.getElementById("h").innerHTML="请求错误111"+ajax.status;
+    ajax.onreadystatechange = function () {
+        if( ajax.readyState == 4 ) {
+            if( ajax.status == 200 ) {
+            	document.getElementById("h").innerHTML=ajax.getResponseHeader("text");
+                fnSucceed( ajax.responseText );
+            }
+            else {
+            	document.getElementById("h").innerHTML="请求错误3";
+                fnFail( "HTTP请求错误！错误码："+ajax.status );
+            }
+        }
+        else {
+        	document.getElementById("h").innerHTML="请求错误1";
+            fnLoading();
+        }
+    }
+    ajax.send( );
+ 
+}
+</script>

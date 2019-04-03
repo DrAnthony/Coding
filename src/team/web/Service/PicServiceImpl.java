@@ -1,16 +1,19 @@
 package team.web.Service;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
@@ -86,5 +89,40 @@ public class PicServiceImpl implements PicService{
 			str=name;
 		return str;
 	}
+
+	@Override
+	public byte[] downPic(String filename) {
+		byte[] b=null;
+		File file=new File("D:\\image\\"+filename);
+		OutputStream os = null;
+		try {
+			os=new FileOutputStream(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		b=new byte[(int) file.length()];
+		try {
+			os.write(b);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return b;
+	}
+
+	@Override
+	public BufferedImage showPic(String name) {
+		BufferedImage bi=null;
+		int height=100,width;
+		try {
+			bi=ImageIO.read(new File("D:\\image\\1.jpg"));
+			width=bi.getWidth()/bi.getHeight()*height;
+			//bi.get
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return bi;
+	}
+	
+	
 	
 }

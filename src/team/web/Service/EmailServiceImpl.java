@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService{
 		smm.setFrom("w826581298@163.com");
 		smm.setTo(email);
 		smm.setSubject("验证码");
-		smm.setText(code);
+		smm.setText("验证码有效期2分钟："+code);
 		//***
 		System.out.println("Over");
 		sender.send(smm);

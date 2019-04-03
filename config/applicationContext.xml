@@ -15,8 +15,8 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 		
 		<mvc:annotation-driven/>
-		
-		<context:component-scan base-package="priv.wd.*">
+		<mvc:default-servlet-handler/>
+		<context:component-scan base-package="team.web.*">
 		   <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 		</context:component-scan>
 		<tx:annotation-driven transaction-manager="transactionManager" /> 

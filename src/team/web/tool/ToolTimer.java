@@ -14,7 +14,7 @@ public class ToolTimer extends Thread{
 	}
 	public void run() {
 		int count=0;
-		while(!stop&&count<10) {
+		while(!stop&&count<120) {
 			try {
 				this.sleep(1000);
 			} catch (InterruptedException e) {

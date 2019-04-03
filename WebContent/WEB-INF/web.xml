@@ -3,8 +3,7 @@
   <display-name>Web_test</display-name>
   
   <welcome-file-list>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
+    <welcome-file>/WEB-INF/pages/login.html</welcome-file>
   </welcome-file-list>
   
   <context-param>
@@ -36,10 +35,11 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   
-  <!-- <servlet-mapping>
+  <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>*.jsp</url-pattern>
-  </servlet-mapping> -->
+    <url-pattern>*.html</url-pattern>
+    <url-pattern>*.js</url-pattern>
+  </servlet-mapping>
   
   
   <servlet>
