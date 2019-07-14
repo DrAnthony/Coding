@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.exm.book.mapper.CodeMapper">
+    <resultMap id="CodeMap" type="team.exm.book.entity.Code">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="phone" jdbcType="CHAR" property="phone"/>
+        <result column="code" jdbcType="CHAR" property="code"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, phone, code
+    </sql>
+    <select id="selectByPhone" parameterType="java.lang.String" resultMap="CodeMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where phone=#{phone,jdbcType=CHAR}
+    </select>
+    <select id="queryNum" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*)
+        from code
+        where phone = #{phone,jdbcType=CHAR}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="CodeMap">
+        select
+        <include refid="Base_Column_List"/>
+        from code
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from code
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="team.exm.book.entity.Code">
+        insert into code (id, phone, code)
+        values (#{id,jdbcType=INTEGER}, #{phone,jdbcType=CHAR}, #{code,jdbcType=CHAR})
+    </insert>
+    <insert id="insertSelective" keyProperty="id" useGeneratedKeys="true" parameterType="team.exm.book.entity.Code">
+        insert into code
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=CHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.exm.book.entity.Code">
+        update code
+        <set>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=CHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=CHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.exm.book.entity.Code">
+        update code
+        set phone = #{phone,jdbcType=CHAR},
+            code  = #{code,jdbcType=CHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.exm.book.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="team.exm.book.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="role" jdbcType="TINYINT" property="role"/>
+        <result column="pwd" jdbcType="VARCHAR" property="pwd"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="gender" jdbcType="TINYINT" property="gender"/>
+        <result column="total" jdbcType="INTEGER" property="total"/>
+        <result column="remain" jdbcType="INTEGER" property="remain"/>
+        <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin"/>
+        <result column="photo" jdbcType="VARCHAR" property="photo"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="SignatureResultMap" type="team.exm.book.entity.User">
+        <result column="signature" jdbcType="LONGNVARCHAR" property="signature"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, role, pwd, phone, gender, total, remain, last_login, photo, nickname, birthday
+    </sql>
+    <sql id="Sign_Column_List">
+        signature
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Sign_Column_List"/>
+        from user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Sign_Column_List"/>
+        from user
+        where phone=#{phone,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from user
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="team.exm.book.entity.User">
+        insert into user (id, name, role,
+                          pwd, phone, gender, total,
+                          remain, last_login, nickname, signature, photo, birthday)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{role,jdbcType=TINYINT},
+                #{pwd,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT},
+                #{total,jdbcType=INTEGER},
+                #{remain,jdbcType=INTEGER}, #{lastLogin,jdbcType=TIMESTAMP}, #{nickname,jdbcType=VARCHAR},
+                #{signature,jdbcType=LONGVARCHAR}, #{photo,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE})
+    </insert>
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="team.exm.book.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="role != null">
+                role,
+            </if>
+            <if test="pwd != null">
+                pwd,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="total != null">
+                total,
+            </if>
+            <if test="remain != null">
+                remain,
+            </if>
+            <if test="lastLogin != null">
+                last_login,
+            </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
+            <if test="signature != null">
+                signature,
+            </if>
+            <if test="photo != null">
+                photo,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                #{role,jdbcType=TINYINT},
+            </if>
+            <if test="pwd != null">
+                #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="total != null">
+                #{total,jdbcType=INTEGER},
+            </if>
+            <if test="remain != null">
+                #{remain,jdbcType=INTEGER},
+            </if>
+            <if test="lastLogin != null">
+                #{lastLogin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="signature != null">
+                #{signature,jdbcType=LONGNVARCHAR},
+            </if>
+            <if test="photo != null">
+                #{photo,jdbcType=VARCHAR}
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=DATE}
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.exm.book.entity.User">
+        update user
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="role != null">
+                role = #{role,jdbcType=TINYINT},
+            </if>
+            <if test="pwd != null">
+                pwd = #{pwd,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                gender = #{gender,jdbcType=TINYINT},
+            </if>
+            <if test="total != null">
+                total = #{total,jdbcType=INTEGER},
+            </if>
+            <if test="remain != null">
+                remain = #{remain,jdbcType=INTEGER},
+            </if>
+            <if test="lastLogin != null">
+                last_login = #{lastLogin,jdbcType=TIMESTAMP},
+            </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+            <if test="signature != null">
+                signature = #{signature,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="photo != null">
+                photo = #{photo,jdbcType=VARCHAR}
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=DATE}
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.exm.book.entity.User">
+        update user
+        set name       = #{name,jdbcType=VARCHAR},
+            role       = #{role,jdbcType=TINYINT},
+            pwd        = #{pwd,jdbcType=VARCHAR},
+            phone      = #{phone,jdbcType=VARCHAR},
+            gender     = #{gender,jdbcType=TINYINT},
+            total      = #{total,jdbcType=INTEGER},
+            remain     = #{remain,jdbcType=INTEGER},
+            last_login = #{lastLogin,jdbcType=TIMESTAMP},
+            nickname   = #{nickname,jdbcType=VARCHAR},
+            signature  = #{signature,jdbcType=LONGVARCHAR},
+            photo = #{photo,jdbcType=VARCHAR},
+            birthday = #{birthday,jdbcType=DATE}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updatePassword" parameterType="team.exm.book.entity.User">
+        update user
+        set pwd        =#{pwd,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

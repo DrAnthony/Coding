@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.exm.book.mapper.CommentsMapper">
+    <resultMap id="BaseResultMap" type="team.exm.book.entity.Comments">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <association property="sId" column="s_id" javaType="team.exm.book.entity.User"
+                     select="team.exm.book.mapper.UserMapper.selectByPrimaryKey"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ContentResultMap" type="team.exm.book.entity.Comments">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, s_id
+    </sql>
+    <sql id="Content_Column_List">
+        content
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Content_Column_List"/>
+        from comments
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from comments
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="team.exm.book.entity.Comments">
+        insert into comments (id, s_id, content)
+        values (#{id,jdbcType=INTEGER}, #{sId.id,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="team.exm.book.entity.Comments">
+        insert into comments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sId != null and sId.id != null">
+                s_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="sId != null and sId.id != null">
+                #{sId.id,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.exm.book.entity.Comments">
+        update comments
+        <set>
+            <if test="sId != null and sId.id != null">
+                s_id = #{sId.id,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.exm.book.entity.Comments">
+        update comments
+        set s_id = #{sId.id,jdbcType=INTEGER},
+            content = #{content,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

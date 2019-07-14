@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.exm.book.mapper.StuBookMapper">
+    <resultMap id="BaseResultMap" type="team.exm.book.entity.StuBook">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="b_date" jdbcType="DATE" property="bDate"/>
+        <result column="r_date" jdbcType="DATE" property="rDate"/>
+        <result column="overtime" jdbcType="INTEGER" property="overtime"/>
+        <result column="isreturned" jdbcType="BIT" property="isReturned"/>
+        <association property="sId" jdbcType="INTEGER" column="s_id"
+                     select="team.exm.book.mapper.UserMapper.selectByPrimaryKey"/>
+        <association property="bId" jdbcType="INTEGER" column="b_id"
+                     select="team.exm.book.mapper.BookMapper.selectByPrimaryKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, b_date, r_date, overtime, isreturned, s_id, b_id
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from stubook
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByUserId" parameterType="team.exm.book.web.request.StuBookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from stubook
+        where s_id=#{sId.id,jdbcType=INTEGER}
+        order by id
+        <trim prefix="limit" suffixOverrides=",">
+            <if test="offset!=null">
+                #{offset,jdbcType=INTEGER},
+            </if>
+            <if test="rows!=null">
+                #{rows,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </select>
+    <select id="selectByUserIdNum" parameterType="team.exm.book.web.request.StuBookVO" resultType="java.lang.Integer">
+        select
+        count(*)
+        from stubook
+        where s_id=#{sId.id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByUserAndBook" parameterType="team.exm.book.web.request.StuBookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from stubook
+        where s_id=#{sId.id,jdbcType=INTEGER}
+        and b_id=#{bId.id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from stubook
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="team.exm.book.entity.StuBook">
+        insert into stubook (id, overtime, isreturned, s_id, b_id)
+        values (#{id,jdbcType=INTEGER}, #{overtime,jdbcType=INTEGER}, #{isReturned,jdbcType=BIT},
+                #{sId.id,jdbcType=INTEGER}, #{bId.id,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="team.exm.book.entity.StuBook">
+        insert into stubook
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="bDate != null">
+                b_date,
+            </if>
+            <if test="rDate != null">
+                r_date,
+            </if>
+            <if test="overtime != null">
+                overtime,
+            </if>
+            <if test="isReturned != null">
+                isreturned,
+            </if>
+            <if test="sId != null and sId.id != null">
+                s_id,
+            </if>
+            <if test="bId != null and bId.id != null">
+                b_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="bDate != null">
+                #{bDate,jdbcType=DATE},
+            </if>
+            <if test="rDate != null">
+                #{rDate,jdbcType=DATE},
+            </if>
+            <if test="overtime != null">
+                #{overtime,jdbcType=INTEGER},
+            </if>
+            <if test="isReturned != null">
+                #{isReturned,jdbcType=BIT},
+            </if>
+            <if test="sId != null and sId.id != null">
+                #{sId.id,jdbcType=INTEGER},
+            </if>
+            <if test="bId != null and bId.id != null">
+                #{bId.id,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.exm.book.entity.StuBook">
+        update stubook
+        <set>
+            <if test="rDate != null">
+                r_date = #{rDate,jdbcType=DATE},
+            </if>
+            <if test="overtime != null">
+                overtime = #{overtime,jdbcType=INTEGER},
+            </if>
+            <if test="isReturned != null">
+                isreturned = #{isReturned,jdbcType=BIT},
+            </if>
+            <if test="sId != null and sId.id != null">
+                s_id = #{sId.id,jdbcType=INTEGER},
+            </if>
+            <if test="bId != null and bId.id != null">
+                b_id = #{bId.id,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.exm.book.entity.StuBook">
+        update stubook
+        set r_date     = #{rDate,jdbcType=DATE},
+            overtime   = #{overtime,jdbcType=INTEGER},
+            isreturned = #{isReturned,jdbcType=BIT},
+            s_id       = #{sId.id,jdbcType=INTEGER},
+            b_id       = #{bId.id,jdbcType=INTEGER}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

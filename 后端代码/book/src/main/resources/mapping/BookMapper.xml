@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.exm.book.mapper.BookMapper">
+    <resultMap id="BaseResultMap" type="team.exm.book.entity.Book">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="isbn" jdbcType="CHAR" property="isbn"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="author" jdbcType="VARCHAR" property="author"/>
+        <result column="date" jdbcType="DATE" property="date"/>
+        <result column="total" jdbcType="INTEGER" property="total"/>
+        <result column="remain" jdbcType="INTEGER" property="remain"/>
+        <result column="price" jdbcType="DOUBLE" property="price"/>
+        <result column="verified" jdbcType="BIT" property="verified"/>
+        <association property="type" column="type" javaType="team.exm.book.entity.BookType"
+                     select="team.exm.book.mapper.BookTypeMapper.selectByPrimaryKey"/>
+        <association property="press" column="press" javaType="team.exm.book.entity.Press"
+                     select="team.exm.book.mapper.PressMapper.selectByPrimaryKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        book.id, isbn, type, book.name, author, press, date, total, remain, price, verified
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from book
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectByKeywords" parameterType="team.exm.book.web.request.BookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from book
+        inner join booktype
+        on book.type=booktype.id
+        inner join press
+        on book.press=press.id
+        where (book.name like concat('%',#{keyword},'%')
+        or booktype.name like concat('%',#{keyword},'%')
+        or book.author like concat('%',#{keyword},'%')
+        or press.name like concat('%',#{keyword},'%'))
+        <trim prefix="and">
+            <if test="role!=null and role==1">
+                verified=true
+            </if>
+        </trim>
+        order by book.id
+        <trim prefix="limit" suffixOverrides=",">
+            <if test="offset!=null">
+                #{offset,jdbcType=INTEGER},
+            </if>
+            <if test="rows!=null">
+                #{rows,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </select>
+    <select id="selectByKeywordsNum" parameterType="team.exm.book.web.request.BookVO" resultType="java.lang.Integer">
+        select
+        count(*)
+        from book as b
+        inner join booktype as bt
+        on b.type=bt.id
+        inner join press as p
+        on b.press=p.id
+        where (b.name like concat('%',#{keyword},'%')
+        or bt.name like concat('%',#{keyword},'%')
+        or b.author like concat('%',#{keyword},'%')
+        or p.name like concat('%',#{keyword},'%'))
+        <trim prefix="and">
+            <if test="role!=null and role==1">
+                verified=true
+            </if>
+        </trim>
+    </select>
+    <select id="selectAll" parameterType="team.exm.book.web.request.BookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from book
+        <trim prefix="where">
+            <if test="role!=null and role==1">
+                verified=true
+            </if>
+        </trim>
+        order by id
+        <trim prefix="limit" suffixOverrides=",">
+            <if test="offset!=null">
+                #{offset,jdbcType=INTEGER},
+            </if>
+            <if test="rows!=null">
+                #{rows,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </select>
+    <select id="selectAllNum" parameterType="team.exm.book.web.request.BookVO" resultType="java.lang.Integer">
+        select
+        count(*)
+        from book
+        <trim prefix="where">
+            <if test="role!=null and role==1">
+                verified=true
+            </if>
+        </trim>
+    </select>
+    <select id="selectSeletive" parameterType="team.exm.book.web.request.BookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from book
+        <trim prefix="where" suffixOverrides="and">
+            <if test="isbn!=null">
+                isbn=#{isbn} and
+            </if>
+            <if test="name!=null">
+                name like concat('%',#{name},'%') and
+            </if>
+            <if test="author!=null">
+                author like concat('%',#{author},'%') and
+            </if>
+            <if test="bookytype!=null">
+                type=#{bookytype} and
+            </if>
+            <if test="bookpress!=null">
+                press=#{bookpress} and
+            </if>
+            <if test="role!=null and role==1">
+                verified=true and
+            </if>
+        </trim>
+        order by id
+        <trim prefix="limit" suffixOverrides=",">
+            <if test="offset!=null">
+                #{offset,jdbcType=INTEGER},
+            </if>
+            <if test="rows!=null">
+                #{rows,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </select>
+    <select id="selectSeletiveNum" parameterType="team.exm.book.web.request.BookVO" resultType="java.lang.Integer">
+        select
+        count(*)
+        from book
+        <trim prefix="where" suffixOverrides="and">
+            <if test="isbn!=null">
+                isbn=#{isbn} and
+            </if>
+            <if test="name!=null">
+                name like concat('%',#{name},'%') and
+            </if>
+            <if test="author!=null">
+                author like concat('%',#{author},'%') and
+            </if>
+            <if test="bookytype!=null">
+                type=#{bookytype} and
+            </if>
+            <if test="bookpress!=null">
+                press=#{bookpress} and
+            </if>
+            <if test="role!=null and role==1">
+                verified=true and
+            </if>
+        </trim>
+    </select>
+    <select id="selectVerify" parameterType="team.exm.book.web.request.BookVO" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from book
+        where verified=false
+        order by id
+        <trim prefix="limit" suffixOverrides=",">
+            <if test="offset!=null">
+                #{offset,jdbcType=INTEGER},
+            </if>
+            <if test="rows!=null">
+                #{rows,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </select>
+    <select id="selectVerifyNum" parameterType="team.exm.book.web.request.BookVO" resultType="java.lang.Integer">
+        select count(*)
+        from book
+        where verified=false;
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete
+        from book
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="team.exm.book.web.request.BookVO">
+        insert into book (id, isbn, type, name,
+                          author, press, date, total,
+                          remain, price, verified)
+        values (#{id,jdbcType=INTEGER}, #{isbn,jdbcType=CHAR}, #{bookytype,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
+                #{author,jdbcType=VARCHAR}, #{bookpress.id,jdbcType=INTEGER}, #{date,jdbcType=DATE},
+                #{total,jdbcType=INTEGER},
+                #{remain,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{verified,jdbcType=BIT})
+    </insert>
+    <insert id="insertSelective" parameterType="team.exm.book.web.request.BookVO">
+        insert into book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="isbn != null">
+                isbn,
+            </if>
+            <if test="bookytype != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="author != null">
+                author,
+            </if>
+            <if test="bookpress != null">
+                press,
+            </if>
+            <if test="date != null">
+                date,
+            </if>
+            <if test="total != null">
+                total,
+            </if>
+            <if test="remain != null">
+                remain,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="verified != null">
+                verified,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="isbn != null">
+                #{isbn,jdbcType=CHAR},
+            </if>
+            <if test="bookytypetype != null">
+                #{bookytype,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null">
+                #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="bookpresspress != null">
+                #{bookpress,jdbcType=INTEGER},
+            </if>
+            <if test="date != null">
+                #{date,jdbcType=DATE},
+            </if>
+            <if test="total != null">
+                #{total,jdbcType=INTEGER},
+            </if>
+            <if test="remain != null">
+                #{remain,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="verified != null">
+                #{verified,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="team.exm.book.web.request.BookVO">
+        update book
+        <set>
+            <if test="isbn != null">
+                isbn = #{isbn,jdbcType=CHAR},
+            </if>
+            <if test="booktype != null">
+                type = #{bookytype,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="author != null">
+                author = #{author,jdbcType=VARCHAR},
+            </if>
+            <if test="bookpress != null">
+                press = #{bookpress,jdbcType=INTEGER},
+            </if>
+            <if test="date != null">
+                date = #{date,jdbcType=DATE},
+            </if>
+            <if test="total != null">
+                total = #{total,jdbcType=INTEGER},
+            </if>
+            <if test="remain != null">
+                remain = #{remain,jdbcType=INTEGER},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="verified != null">
+                verified = #{verified,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="team.exm.book.web.request.BookVO">
+        update book
+        set type     = #{bookytype,jdbcType=INTEGER},
+            name     = #{name,jdbcType=VARCHAR},
+            author   = #{author,jdbcType=VARCHAR},
+            press    = #{bookpress,jdbcType=INTEGER},
+            date     = #{date,jdbcType=DATE},
+            total    = #{total,jdbcType=INTEGER},
+            remain   = #{remain,jdbcType=INTEGER},
+            price    = #{price,jdbcType=DOUBLE},
+            verified = #{verified,jdbcType=BIT}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>
