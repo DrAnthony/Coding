@@ -41,4 +41,9 @@ public class LoginController {
         re = new ResponseEntity(1, "成功退出");
         return re;
     }
+
+    @PostMapping("/forget")
+    public ResponseEntity forgetPwd(@RequestBody UserVO user){
+        return us.forget(user);
+    }
 }

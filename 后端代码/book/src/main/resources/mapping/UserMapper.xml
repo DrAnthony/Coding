@@ -133,10 +133,10 @@
                 #{signature,jdbcType=LONGNVARCHAR},
             </if>
             <if test="photo != null">
-                #{photo,jdbcType=VARCHAR}
+                #{photo,jdbcType=VARCHAR},
             </if>
             <if test="birthday != null">
-                #{birthday,jdbcType=DATE}
+                #{birthday,jdbcType=DATE},
             </if>
         </trim>
     </insert>
@@ -174,10 +174,10 @@
                 signature = #{signature,jdbcType=LONGVARCHAR},
             </if>
             <if test="photo != null">
-                photo = #{photo,jdbcType=VARCHAR}
+                photo = #{photo,jdbcType=VARCHAR},
             </if>
             <if test="birthday != null">
-                birthday = #{birthday,jdbcType=DATE}
+                birthday = #{birthday,jdbcType=DATE},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

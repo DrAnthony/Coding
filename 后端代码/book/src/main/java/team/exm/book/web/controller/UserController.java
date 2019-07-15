@@ -3,6 +3,7 @@ package team.exm.book.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import team.exm.book.service.CommentsService;
 import team.exm.book.service.StuBookService;
 import team.exm.book.service.UserService;
@@ -65,5 +66,11 @@ public class UserController {
     public ResponseEntity records(@RequestBody StuBookVO sbv, HttpServletRequest request){
         session=request.getSession();
         return sbs.getRecords((Integer)session.getAttribute("user"),sbv);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity upload(@RequestParam("file")MultipartFile file,HttpServletRequest request){
+        session=request.getSession();
+        return us.upload((Integer)session.getAttribute("user"),file);
     }
 }

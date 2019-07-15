@@ -25,7 +25,7 @@ public class CodeService {
     //要增加数据校验代码
     public ResponseEntity addCode(UserVO user) {
         String phone = user.getPhone();
-        if(um.selectByPhone(user.getPhone())!=null){
+        if(user.getOperation()!=0&&um.selectByPhone(user.getPhone())!=null){
             re=new ResponseEntity(0,"该手机已经被使用");
             return re;
         }
@@ -53,11 +53,11 @@ public class CodeService {
      * @return 0:验证码输入错误
      * @return -1:验证码已失效
      * */
-    public int checkCode(String phone, String code) {
-        if (cm.queryNum(phone) == 0) {
+    public int checkCode(UserVO user) {
+        if (cm.queryNum(user.getPhone()) == 0) {
             return -1;
         } else {
-            if (code.equals(cm.selectByPhone(phone).getCode())) {
+            if (user.getCode().equals(cm.selectByPhone(user.getPhone()).getCode())) {
                 stopTimer();
                 return 1;
             } else

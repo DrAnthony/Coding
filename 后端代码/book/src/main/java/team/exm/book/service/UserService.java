@@ -3,12 +3,15 @@ package team.exm.book.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import team.exm.book.entity.User;
 import team.exm.book.mapper.UserMapper;
 import team.exm.book.web.request.UserVO;
 import team.exm.book.web.response.ResponseEntity;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -16,6 +19,10 @@ import java.util.Date;
 public class UserService {
     private Logger log=LoggerFactory.getLogger(UserService.class);
     private ResponseEntity re;
+
+    @Value("${upload-path}")
+    private String path;
+
     @Autowired
     UserMapper um;
     @Autowired
@@ -78,7 +85,7 @@ public class UserService {
                 (user.getCode() == null) || (user.getPwd() == null)) {
             re = new ResponseEntity(0, "您输入的信息不完整");
         } else {
-            int res = cs.checkCode(user.getPhone(), user.getCode());
+            int res = cs.checkCode(user);
             if (res == -1) {
                 re = new ResponseEntity(0, "验证码已失效，请重新获取验证码");
             } else if (res == 0) {
@@ -144,6 +151,81 @@ public class UserService {
                     re = new ResponseEntity(0, "密码错误");
                 }
             }
+        }
+        return re;
+    }
+
+    public ResponseEntity forget(UserVO user){
+        Integer ope=user.getOperation();
+        if(ope==null){
+            re=new ResponseEntity(0,"操作码不能为空");
+            return re;
+        }
+        String phone=user.getPhone();
+        if(phone==null){
+            re=new ResponseEntity(0,"您输入的手机号有误");
+            return re;
+        }
+        if(um.selectByPhone(phone)==null){
+            re=new ResponseEntity(0,"该手机号未注册");
+            return re;
+        }
+        if(ope==0){
+            cs.addCode(user);
+            re=new ResponseEntity(1,"验证码发送成功");
+        }else if(ope==1){
+            int res=cs.checkCode(user);
+            if (res == -1) {
+                re = new ResponseEntity(0, "验证码已失效，请重新获取验证码");
+            } else if (res == 0) {
+                re = new ResponseEntity(0, "验证码错误，请核实后重新输入");
+            } else if (res == 1) {
+                re=new ResponseEntity(1,"验证码正确");
+            }
+        } else if(ope==2){
+            if(user.getNewPwd()==null){
+                re=new ResponseEntity(0,"您输入的新密码为空");
+            }else{
+                User temp=um.selectByPhone(phone);
+                temp.setPwd(user.getNewPwd());
+                um.updatePassword(temp);
+                re=new ResponseEntity(1,"密码重置成功");
+            }
+        }else {
+            re=new ResponseEntity(0,"操作码错误");
+        }
+        return re;
+    }
+
+    public ResponseEntity upload(Integer id, MultipartFile multipartFile){
+        if(id==null){
+            re=new ResponseEntity(0,"当前用户未登录");
+            return re;
+        }
+        if(um.selectByPrimaryKey(id)==null){
+            re=new ResponseEntity(0,"当前用户无效");
+            return re;
+        }
+
+        if(multipartFile.isEmpty()){
+            re=new ResponseEntity(0,"文件为空");
+            return re;
+        }
+        String originalname=multipartFile.getOriginalFilename();
+        String type=originalname.substring(originalname.lastIndexOf('.'));
+        String fileName=String.valueOf(System.currentTimeMillis())+type;
+        File des=new File(path+fileName);
+        log.info(des.getPath());
+        try{
+            multipartFile.transferTo(des);
+            User temp=new User();
+            temp.setId(id);
+            temp.setPhoto(fileName);
+            um.updateByPrimaryKeySelective(temp);
+            re=new ResponseEntity(1,"上传成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            re=new ResponseEntity(0,"系统错误，文件上传失败");
         }
         return re;
     }

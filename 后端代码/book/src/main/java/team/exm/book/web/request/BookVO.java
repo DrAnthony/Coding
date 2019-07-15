@@ -85,4 +85,6 @@ public class BookVO extends Book {
     public void setBookpress(Integer bookpress) {
         this.bookpress = bookpress;
     }
+
+
 }
